@@ -1,0 +1,47 @@
+pkgbase='automake'
+pkgname=('automake-doc' 'automake')
+pkgver=1.15.1.r217.g3edf8e056
+pkgrel=1
+pkgdesc='A GNU tool for automatically creating Makefiles'
+url='https://www.gnu.org/software/automake/automake.html'
+arch=('x86_64')
+license=('GPL2+ MIT Public Domain')
+groups=('base')
+depends_doc=()
+depends=('perl')
+source=('git://git.sv.gnu.org/automake.git')
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "${pkgbase}"
+  
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd "${pkgbase}"
+  
+  ./bootstrap
+  
+  ./configure --prefix='/usr'
+  
+  make
+}
+
+package() {
+  package-init
+  
+  cd "${pkgbase}"
+  
+  make DESTDIR="${tmpdir}" install
+}
+
+package_automake-doc() {
+  package-doc
+}
+
+package_automake() {
+  groups=('base-devel')
+  
+  package-base
+}
