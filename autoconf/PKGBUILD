@@ -1,0 +1,47 @@
+pkgbase='autoconf'
+pkgname=('autoconf-doc' 'autoconf')
+pkgver=2.69.r192.ge5f5e535
+pkgrel=1
+pkgdesc='A GNU tool for automatically configuring source code'
+url='https://www.gnu.org/software/autoconf/autoconf.html'
+arch=('x86_64')
+license=('GPL2+')
+depends_doc=()
+depends=('m4' 'perl')
+makedepends=('texinfo' 'help2man')
+source=('git://git.sv.gnu.org/autoconf.git')
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "${pkgbase}"
+  
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd "${pkgbase}"
+  
+  autoreconf -i
+  
+  ./configure --prefix='/usr'
+  
+  make
+}
+
+package() {
+  package-init
+  
+  cd "${pkgbase}"
+  
+  make DESTDIR="${tmpdir}" install
+}
+
+package_autoconf-doc() {
+  package-doc
+}
+
+package_autoconf() {
+  groups=('base-devel')
+  
+  package-base
+}
