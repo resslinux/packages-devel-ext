@@ -10,24 +10,14 @@ depends_doc=()
 depends=('bash')
 makedepends=('m4' 'help2man')
 source=('git://git.sv.gnu.org/libtool.git'
-        'git://git.sv.gnu.org/gnulib.git'
-        'busybox.patch')
+        'git://git.sv.gnu.org/gnulib.git')
 sha256sums=('SKIP'
-            'SKIP'
-            '2ecb080001dcfcdd57bdbd20d6c7c32c5257346cc2dd301c9a467f0fa15357c5')
+            'SKIP')
 
 pkgver() {
   cd "${pkgbase}"
   
   git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
-}
-
-prepare() {
-  cd "gnulib"
-  
-  patch -Np1 -i "${srcdir}/busybox.patch"
-  
-  rm "${srcdir}/${pkgbase}/gl/build-aux/do-release-commit-and-tag.diff"
 }
 
 build() {
