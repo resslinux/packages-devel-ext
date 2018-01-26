@@ -60,5 +60,7 @@ package_ninja-doc() {
 }
 
 package_ninja() {
+  groups=('base-devel')
+  
   package-base
 } 

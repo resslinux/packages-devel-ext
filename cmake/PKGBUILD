@@ -52,5 +52,7 @@ package_cmake-dev(){
 }
 
 package_cmake(){
+  groups=('base-devel')
+  
   package-base
 }
