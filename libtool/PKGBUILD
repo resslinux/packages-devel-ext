@@ -1,0 +1,56 @@
+pkgbase='libtool'
+pkgname=('libtool-doc' 'libtool')
+pkgver=2.4.6.r40.g6ca5e224
+pkgrel=1
+pkgdesc='A generic library support script'
+url='https://www.gnu.org/software/libtool/libtool.html'
+arch=('x86_64')
+license=('GPL')
+depends_doc=()
+depends=('bash')
+makedepends=('m4' 'help2man')
+source=('git://git.sv.gnu.org/libtool.git'
+        'git://git.sv.gnu.org/gnulib.git'
+        'busybox.patch')
+sha256sums=('SKIP'
+            'SKIP'
+            '2ecb080001dcfcdd57bdbd20d6c7c32c5257346cc2dd301c9a467f0fa15357c5')
+
+pkgver() {
+  cd "${pkgbase}"
+  
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd "gnulib"
+  
+  patch -Np1 -i "${srcdir}/busybox.patch"
+  
+  rm "${srcdir}/${pkgbase}/gl/build-aux/do-release-commit-and-tag.diff"
+}
+
+build() {
+  cd "${pkgbase}"
+  
+  ./bootstrap --skip-git --gnulib-srcdir="${srcdir}/gnulib/"
+  
+  ./configure --prefix='/usr' \
+              --disable-static
+  
+  make
+}
+
+package() {
+  cd "${pkgbase}"
+  
+  make DESTDIR="${tmpdir}" install
+}
+
+package_libtool-doc() {
+  package-doc
+}
+
+package_libtool() {
+  package-base
+}
