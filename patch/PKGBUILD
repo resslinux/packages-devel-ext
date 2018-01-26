@@ -1,0 +1,60 @@
+pkgbase='patch'
+pkgname=('patch-doc' 'patch')
+pkgver=2.7.5.r24.g6a737fc
+pkgrel=1
+pkgdesc='A utility to apply patch files to original sources'
+url='https://savannah.gnu.org/projects/patch/'
+arch=('x86_64')
+license=('GPL')
+depends_doc=()
+depends=('musl')
+makedepends=('bison')
+source=('git://git.savannah.gnu.org/patch.git'
+        'git://git.sv.gnu.org/gnulib.git'
+        'busybox.patch')
+sha256sums=('SKIP'
+            'SKIP'
+            '4fa92763767c6cb05374042753dfa247ad7a402827f6e18a0e83b1eeb90bf437')
+
+pkgver() {
+  cd "${pkgbase}"
+  
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/[_-]/./g'
+}
+
+prepare() {
+  cd "${pkgbase}"
+  
+  patch -Np1 -i "${srcdir}/busybox.patch"
+}
+
+build() {
+  cd "${pkgbase}"
+  
+  ./bootstrap --no-git --gnulib-srcdir="${srcdir}/gnulib/"
+  
+  ./configure --prefix='/usr'
+  
+  make
+}
+
+package() {
+  package-init
+  
+  cd "${pkgbase}"
+
+  make DESTDIR="${tmpdir}" install
+  
+  rm "${tmpdir}/usr/lib/charset.alias"
+  rmdir "${tmpdir}/usr/lib/"
+}
+
+package_patch-doc() {
+  package-doc
+}
+
+package_patch() {
+  groups=('base-devel')
+  
+  package-base
+}
