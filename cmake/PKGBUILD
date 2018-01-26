@@ -1,0 +1,56 @@
+pkgbase='cmake'
+pkgname=('cmake-doc' 'cmake-dev' 'cmake')
+pkgver=3.10.2.r940.ga24dbba34
+pkgrel=1
+pkgdesc='A cross-platform open-source make system'
+url='https://cmake.org/'
+arch=('x86_64')
+license=('custom')
+depends_doc=()
+depends_dev=('cmake')
+depends=('libcurl' 'zlib' 'libarchive')
+makedepends=('curl-dev' 'zlib-dev' 'libarchive-dev')
+source=("git+https://gitlab.kitware.com/cmake/cmake.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "${pkgbase}"
+  
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd "${pkgbase}"
+
+  cmake -G 'Ninja' \
+        -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
+        -DCMAKE_USE_SYSTEM_CURL:BOOL=ON \
+        -DCMAKE_USE_SYSTEM_LIBARCHIVE:BOOL=ON \
+        -DCMAKE_USE_SYSTEM_ZLIB:BOOL=ON
+  
+  ninja
+}
+
+package() {
+  package-init
+  
+  cd "${pkgbase}"
+  
+  DESTDIR="${tmpdir}" ninja install
+
+  install -Dm644 "Copyright.txt" "${tmpdir}/usr/share/licenses/${pkgbase}/LICENSE"
+  
+  mv "${tmpdir}/usr/doc" "${tmpdir}/usr/share/doc"
+}
+
+package_cmake-doc(){
+  package-doc
+}
+
+package_cmake-dev(){
+  package-dev
+}
+
+package_cmake(){
+  package-base
+}
