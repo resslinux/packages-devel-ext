@@ -32,6 +32,8 @@ build() {
 }
 
 package() {
+  package-init
+  
   cd "${pkgbase}"
   
   make DESTDIR="${tmpdir}" install
