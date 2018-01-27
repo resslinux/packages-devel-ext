@@ -1,0 +1,63 @@
+pkgbase='file'
+pkgname=('file-doc' 'libmagic-dev' 'libmagic' 'file')
+pkgver=5.32.r74.g8f8d2c04
+pkgrel=1
+pkgdesc='File type identification utility'
+url='https://www.darwinsys.com/file/'
+arch=('x86_64')
+license=('custom')
+depends_doc=()
+depends_lib=('musl' 'zlib')
+depends_dev=('libmagic')
+depends=('libmagic')
+source=('git://github.com/file/file.git')
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "${pkgbase}"
+  
+  git describe --long --tags | sed 's/^FILE//;s/\([^-]*-g\)/r\1/;s/[_-]/./g'
+}
+
+build() {
+  cd "${pkgbase}"
+  
+  CFLAGS=${CFLAGS//'-flto=thin'/}
+  CXXFLAGS=${CXXFLAGS//'-flto=thin'/}
+  LDFLAGS=${LDFLAGS//'-flto=thin'/}
+  
+  autoreconf -i
+  
+  ./configure --prefix='/usr' \
+              --datadir='/usr/share/file'
+  
+  make
+}
+
+package() {
+  package-init
+  
+  cd "${pkgbase}"
+  
+  make DESTDIR="${tmpdir}" install
+  
+  install -D -m0644 "COPYING" "${tmpdir}/usr/share/licenses/${pkgname}/COPYING"
+}
+
+package_file-doc() {
+  package-doc
+}
+
+package_libmagic-dev() {
+  package-dev
+}
+
+package_libmagic() {
+  package-lib
+}
+
+package_file() {
+  groups=('base-devel')
+  
+  package-base
+}
