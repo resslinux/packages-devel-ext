@@ -1,0 +1,22 @@
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -23,7 +23,7 @@
+ config_aux_dir	= build-aux
+ config_macro_dir= $(config_aux_dir)/m4
+ 
+-SUBDIRS		= po m4/gnu . doc tests/gnu
++SUBDIRS		= po m4/gnu . doc
+ 
+ ACLOCAL_AMFLAGS = -I build-aux/m4
+ AUTOMAKE_OPTIONS = nostdinc
+--- a/configure.ac
++++ b/configure.ac
+@@ -356,7 +356,7 @@
+ m4/gnu/Makefile
+ m4/system.h:m4/system_.h
+ tests/atlocal
+-tests/gnu/Makefile
++
+ ])
+ 
+ AC_OUTPUT

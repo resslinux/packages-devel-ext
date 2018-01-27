@@ -1,0 +1,12 @@
+--- a/bootstrap
++++ b/bootstrap
+@@ -2289,7 +2289,7 @@
+     # happens.  This means that occasionally, the output from both calls
+     # ends up in the result, but the alternative would be to discard the
+     # output from one call, and hope the other produces something useful.
+-    { $_G_cmd --version </dev/null || $_G_cmd --version; } 2>/dev/null
++    { $_G_cmd --help </dev/null || $_G_cmd --help; } 2>/dev/null
+     _G_status=$?
+ 
+     test 0 -ne "$_G_status" && test -n "$_G_fatal_error_msg" \
+Only in src-orig: m4/po/LINGUAS
