@@ -1,0 +1,15 @@
+--- a/maintMakefile
++++ b/maintMakefile
+@@ -19,12 +19,6 @@
+ # Where to put the CVS checkout of the GNU make web repository
+ MAKEWEBDIR ?= $(SRCROOTDIR)/make/make-web
+ 
+-# We like mondo-warnings!
+-AM_CFLAGS += -Wall -Wextra -Werror -Wwrite-strings -Wshadow -Wpointer-arith \
+-	-Wdeclaration-after-statement -Wbad-function-cast -Wformat-security \
+-	-Wtype-limits -Wunused-but-set-parameter -Wlogical-op \
+-	-Wignored-qualifiers -Wformat-signedness -Wduplicated-cond
+-
+ # Unfortunately the Guile headers are sometimes broken.  Convince GCC
+ # to treat them as system headers so warnings are ignored.
+ GUILE_CFLAGS := $(patsubst -I%,-isystem %,$(GUILE_CFLAGS))

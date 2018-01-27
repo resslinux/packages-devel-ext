@@ -1,0 +1,65 @@
+pkgbase='make'
+pkgname=('make-doc' 'make-dev' 'make')
+pkgver=4.2.1.r68.g48c8a11
+pkgrel=1
+pkgdesc='GNU make utility to maintain groups of programs'
+url='https://www.gnu.org/software/make/make.html'
+arch=('x86_64')
+license=('GPL3')
+depends_doc=()
+depends_dev=('make')
+depends=('musl')
+makedepends=('rsync' 'wget')
+source=('git://git.savannah.gnu.org/make.git'
+        'clang.patch')
+sha256sums=('SKIP'
+            'b5539457f5070011b1c7bc8e3b9e6787c2ae27fc85be775b76db456eb7aeac33')
+
+pkgver() {
+  cd "${pkgbase}"
+
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare () {
+  cd "${pkgbase}"
+  
+  patch -Np1 -i "${srcdir}/clang.patch"
+}
+
+build() {
+  cd "${pkgbase}"
+
+  autoreconf -i
+  
+  ./configure --prefix='/usr'
+  
+  make update
+  make
+}
+
+check() {
+  cd "${pkgbase}"
+
+  make check
+}
+
+package() {
+  package-init
+  
+  cd "${pkgbase}"
+
+  make DESTDIR="${tmpdir}" install
+}
+
+package_make-doc() {
+  package-doc
+}
+
+package_make-dev() {
+  package-dev
+}
+
+package_make() {
+  package-base
+}
