@@ -1,0 +1,60 @@
+pkgbase='pkg-config'
+pkgname=('pkg-config-doc' 'pkg-config')
+pkgver=0.29.2.r1.g2dd2b19
+pkgrel=1
+pkgdesc='A system for managing library compile/link flags'
+url='https://www.freedesktop.org/wiki/Software/pkg-config/'
+arch=('x86_64')
+license=('GPL2')
+depends_doc=()
+depends=('musl' 'glib2')
+source=('git://anongit.freedesktop.org/pkg-config'
+        'm4.patch')
+sha256sums=('SKIP'
+            'e6fe6f08a7a34ce038aa441865b2e127605b62b322e4bd4abb11335ac8c8c104')
+
+pkgver() {
+  cd "${pkgbase}"
+
+  git describe --long --tags | sed 's/^pkg-config-//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd "${pkgbase}"
+  
+  patch -Np1 -i "${srcdir}/m4.patch"
+}
+
+build() {
+  cd "${pkgbase}"
+
+  ./autogen.sh --no-configure
+  
+  ./configure --prefix='/usr'
+
+  make
+}
+
+check() {
+  cd "${pkgbase}"
+
+  make check
+}
+
+package() {
+  package-init
+  
+  cd "${pkgbase}"
+
+  make DESTDIR="${tmpdir}" install
+} 
+
+package_pkg-config-doc() {
+  package-doc
+}
+
+package_pkg-config() {
+  groups=('base-devel')
+  
+  package-base
+}
