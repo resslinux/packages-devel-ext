@@ -10,7 +10,7 @@ depends_doc=()
 depends_dev=('cmake')
 depends=('libcurl' 'zlib' 'libarchive')
 makedepends=('curl-dev' 'zlib-dev' 'libarchive-dev')
-source=("git+https://gitlab.kitware.com/cmake/cmake.git")
+source=('git+https://gitlab.kitware.com/cmake/cmake.git')
 sha256sums=('SKIP')
 
 pkgver() {
