@@ -44,5 +44,7 @@ package_libtool-doc() {
 }
 
 package_libtool() {
+  groups=('base-devel')
+  
   package-base
 }

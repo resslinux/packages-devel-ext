@@ -61,5 +61,7 @@ package_make-dev() {
 }
 
 package_make() {
+  groups=('base-devel')
+  
   package-base
 }

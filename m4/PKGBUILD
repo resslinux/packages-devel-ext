@@ -76,5 +76,7 @@ package_m4-lib() {
 }
 
 package_m4() {
+  groups=('base-devel')
+  
   package-base
 }
