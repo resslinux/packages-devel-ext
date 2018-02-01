@@ -1,0 +1,40 @@
+pkgbase='libexecinfo'
+pkgname=('libexecinfo-dev' 'libexecinfo')
+pkgver=20180201.r0.g115624c
+pkgrel=1
+pkgdesc='A quick-n-dirty BSD licensed clone of the GNU libc backtrace facility.'
+url='https://github.com/resslinux/libexecinfo'
+arch=('x86_64')
+license=('BSD')
+depends_dev=('libexecinfo')
+depends=('musl')
+source=('git://github.com/resslinux/libexecinfo.git')
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "${pkgbase}"
+  
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd "${pkgbase}"
+  
+  make
+}
+
+package() {
+  package-init
+  
+  cd "${pkgbase}"
+
+  make DESTDIR="${tmpdir}" install
+}
+
+package_libexecinfo-dev() {
+  package-dev
+}
+
+package_libexecinfo() {
+  package-base
+}
