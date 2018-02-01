@@ -1,0 +1,30 @@
+pkgname='crt'
+pkgver=20180201.r0.g7ac0ba8
+pkgrel=1
+pkgdesc='C Runtime Base files'
+url='https://github.com/resslinux/crt'
+arch=('x86_64')
+license=('BSD')
+depends=('filesystem')
+source=('git://github.com/resslinux/crt.git')
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "${pkgname}"
+  
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd "${pkgname}"
+  
+  CFLAGS=${CFLAGS//'-flto=thin'/}
+  
+  make
+}
+
+package() {
+  cd "${pkgname}"
+  
+  make DESTDIR="${pkgdir}" install
+}
