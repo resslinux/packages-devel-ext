@@ -1,0 +1,11 @@
+--- a/scripts/fakeroot.in
++++ b/scripts/fakeroot.in
+@@ -43,7 +43,7 @@
+ 
+ libfound=no
+ 
+-GETOPTEST=`getopt --version`
++GETOPTEST=`getopt -T`
+ case $GETOPTEST in
+ getopt*) # GNU getopt
+     FAKE_TEMP=`getopt -l lib: -l faked: -l unknown-is-real -l fd-base: -l version -l help -- +l:f:i:s:ub:vh "$@"`

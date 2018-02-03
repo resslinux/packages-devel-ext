@@ -1,0 +1,65 @@
+pkgbase='fakeroot'
+pkgname=('fakeroot-doc' 'fakeroot')
+pkgver=1.21.3.1.r7.gd399b7e
+pkgrel=3
+pkgdesc='Gives a fake root environment, useful for building packages as a non-privileged user'
+url='https://fakeroot.alioth.debian.org/'
+arch=('x86_64')
+license=('GPL')
+depends_doc=()
+depends=('musl')
+makedepends=('python' 'libressl-dev' 'libcap-dev' 'po4a')
+source=('git://anonscm.debian.org/users/clint/fakeroot.git'
+        'busybox.patch'
+        'get-xattr.patch')
+sha256sums=('SKIP'
+            '4114e8f4bbc6cf636a3e532472e51ef249e6d90dc9ac45464abccd9e27d9c78d'
+            '3420da0789caef582fcfc890c657da4136b3b06d1205443f4409cdf85ab02a46')
+
+pkgver() {
+  cd "${pkgbase}"
+  
+  git describe --long --tags | sed 's/^debian\///;s/\([^-]*-g\)/r\1/;s/[_-]/./g'
+}
+
+prepare() {
+  cd "${pkgbase}"
+  
+  patch -Np1 -i "${srcdir}/busybox.patch"
+  patch -Np1 -i "${srcdir}/get-xattr.patch"
+}
+
+build() {
+  cd "${pkgbase}"
+  
+  CFLAGS="-D_STAT_VER=0 ${CFLAGS}"
+  
+  ./bootstrap
+  
+  ./configure --prefix='/usr' \
+              --disable-static
+  
+  make
+  
+  cd "doc"
+  po4a -k 0 --rm-backups --variable "srcdir=../doc/" "po4a/po4a.cfg"
+}
+
+
+package() {
+  package-init
+  
+  cd "${pkgbase}"
+  
+  make DESTDIR="${tmpdir}" install
+}
+
+package_fakeroot-doc() {
+  package-doc
+}
+
+package_fakeroot() {
+  groups=('base-devel')
+  
+  package-base
+}
