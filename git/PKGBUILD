@@ -1,0 +1,72 @@
+pkgbase='git'
+pkgname=('git-doc' 'git')
+pkgver=2.16.1.r72.g5be1f00a9
+pkgrel=1
+pkgdesc='A distributed version control system'
+url='https://www.git-scm.com/'
+arch=('x86_64')
+license=('GPL2+')
+groups=('base')
+depends_doc=()
+depends=('musl' 'libressl-lib')
+makedepends=('zlib-dev' 'libressl-dev' 'curl-dev' 'asciidoc' 'xmlto')
+source=('git://git.kernel.org/pub/scm/git/git.git'
+        'git-daemon.initd'
+        'git-daemon.confd')
+sha256sums=('SKIP'
+            '069878aba8d7c7f229b6049f679d1f93873bdada1107b77fc9a9b2bd8be94516'
+            '4703ba2372c661fb674a29fea7f64983f8b1b3136d971663509249655bca6e21')
+
+_makeopts="NO_GETTEXT=YesPlease
+           NO_NSEC=YesPlease
+           NO_SVN_TESTS=YesPlease
+           NO_REGEX=YesPlease
+           NO_PYTHON=YesPlease
+           NO_PERL=YesPlease
+           NO_TCLTK=YesPlease"
+
+pkgver() {
+  cd "${pkgbase}"
+  
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd "${pkgbase}"
+  
+  CFLAGS=${CFLAGS//'-flto=thin'/}
+  CXXFLAGS=${CXXFLAGS//'-flto=thin'/}
+  LDFLAGS=${LDFLAGS//'-flto=thin'/}
+  
+  make configure
+  
+  ./configure --prefix='/usr' \
+              --without-expat \
+              --without-tcltk \
+              --without-libpcre
+  
+  make ${_makeopts}
+}
+
+package() {
+  package-init
+  
+  cd "${pkgbase}"
+  
+  make prefix='/usr' DESTDIR="${tmpdir}" INSTALLDIRS=vendor ${_makeopts} install
+  
+  install -d "${tmpdir}/var/git"
+  
+  install -Dm755 "${srcdir}/git-daemon.initd" "${tmpdir}/etc/init.d/git-daemon"
+  install -Dm644 "${srcdir}/git-daemon.confd" "${tmpdir}/etc/conf.d/git-daemon"
+  
+  make prefix='/usr' DESTDIR="${tmpdir}" install-man
+}
+
+package_git-doc() {
+  package-doc
+}
+
+package_git() {
+  package-base
+}
