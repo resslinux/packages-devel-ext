@@ -190,6 +190,7 @@ package_libclang-dev() {
 
 package_clang() {
   depends=('libclang' 'crt' 'musl-dev' 'compiler-rt' 'libunwind-dev' 'libcxxabi-dev' 'libcxx-dev' 'lld')
+  groups=('base-devel')
   
   package-base
 }
