@@ -68,5 +68,7 @@ package_git-doc() {
 }
 
 package_git() {
+  groups=('base-devel')
+  
   package-base
 }
