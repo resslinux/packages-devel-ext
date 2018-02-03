@@ -1,0 +1,11 @@
+--- a/libcxx/include/locale
++++ b/libcxx/include/locale
+@@ -11,6 +11,8 @@
+ #ifndef _LIBCPP_LOCALE
+ #define _LIBCPP_LOCALE
+ 
++# include <support/musl/xlocale.h>
++
+ /*
+     locale synopsis
+ 
