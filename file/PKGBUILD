@@ -1,6 +1,6 @@
 pkgbase='file'
 pkgname=('file-doc' 'libmagic-dev' 'libmagic' 'file')
-pkgver=5.32.r74.g8f8d2c04
+pkgver=5.32.r75.ga43f22cf
 pkgrel=1
 pkgdesc='File type identification utility'
 url='https://www.darwinsys.com/file/'
