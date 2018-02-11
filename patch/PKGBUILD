@@ -1,6 +1,6 @@
 pkgbase='patch'
 pkgname=('patch-doc' 'patch')
-pkgver=2.7.5.r24.g6a737fc
+pkgver=2.7.6.r3.g074e239
 pkgrel=1
 pkgdesc='A utility to apply patch files to original sources'
 url='https://savannah.gnu.org/projects/patch/'
@@ -13,19 +13,12 @@ source=('git://git.savannah.gnu.org/patch.git'
         'git://git.sv.gnu.org/gnulib.git'
         'busybox.patch')
 sha256sums=('SKIP'
-            'SKIP'
-            '4fa92763767c6cb05374042753dfa247ad7a402827f6e18a0e83b1eeb90bf437')
+            'SKIP')
 
 pkgver() {
   cd "${pkgbase}"
   
   git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/[_-]/./g'
-}
-
-prepare() {
-  cd "${pkgbase}"
-  
-  patch -Np1 -i "${srcdir}/busybox.patch"
 }
 
 build() {
