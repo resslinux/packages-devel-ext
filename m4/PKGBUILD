@@ -12,9 +12,7 @@ depends_dev=('m4-lib')
 depends=('m4-lib')
 makedepends=('texinfo' 'rsync')
 source=('git://git.sv.gnu.org/m4.git#branch=branch-1.4'
-        'git://git.sv.gnu.org/gnulib.git'
-        'busybox.patch'
-        'disable-tests.patch')
+        'git://git.sv.gnu.org/gnulib.git')
 sha256sums=('SKIP'
             'SKIP'
             '344052d315e09e3a042129858349c1d7a27a35d61b09d99173e96f89aaf4131d'
