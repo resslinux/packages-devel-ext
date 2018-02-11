@@ -10,8 +10,7 @@ depends_doc=()
 depends=('musl')
 makedepends=('bison')
 source=('git://git.savannah.gnu.org/patch.git'
-        'git://git.sv.gnu.org/gnulib.git'
-        'busybox.patch')
+        'git://git.sv.gnu.org/gnulib.git')
 sha256sums=('SKIP'
             'SKIP')
 
