@@ -1,0 +1,56 @@
+pkgbase='texinfo'
+pkgname=('texinfo-doc' 'texinfo')
+pkgver=6.5.r7997
+pkgrel=1
+pkgdesc='GNU documentation system for on-line information and printed output'
+url='https://www.gnu.org/software/texinfo/texinfo.html'
+arch=('x86_64')
+license=('GPL3')
+depends_doc=()
+depends=('musl')
+makedepends=('gawk')
+source=('texinfo::svn://svn.savannah.gnu.org/texinfo/trunk'
+        'perl.patch')
+sha256sums=('SKIP'
+            'b54b5e496fb83c7ca7685bf83e4d02e04a816624d75ff2d0bc6b1bf0917e3d58')
+
+pkgver() {
+  cd "${pkgbase}"
+  
+  local ver=$(grep 'AC_INIT' configure.ac | cut -d ',' -f 2 | cut -d '[' -f 2 | cut -d ']' -f 1)
+  local rev="$(svnversion)"
+  
+  printf "%s.r%s" "${ver/'dev'/}" "${rev//[[:alpha:]]}"
+}
+
+prepare() {
+  cd "${pkgbase}"
+  
+  patch -Np1 -i "${srcdir}/perl.patch"
+}
+
+build() {
+  cd "${pkgbase}"
+  
+  ./autogen.sh
+  
+  ./configure --prefix='/usr'
+  
+  make -j1
+}
+
+package() {
+  package-init
+  
+  cd "${pkgbase}"
+
+  make DESTDIR="${tmpdir}" install
+}
+
+package_texinfo-doc() {
+  package-doc
+}
+
+package_texinfo() {
+  package-base
+}
