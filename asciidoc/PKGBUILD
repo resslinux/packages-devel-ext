@@ -1,0 +1,52 @@
+pkgbase='asciidoc'
+pkgname=('asciidoc-doc' 'asciidoc')
+pkgver=8.6.10.r4.g5f0652b
+pkgrel=1
+pkgdesc='Text based documentation'
+url='https://asciidoc.org/'
+arch=('x86_64')
+license=('GPL')
+depends_doc=()
+depends=('python2')
+makedepends=('make' 'clang')
+source=('git://github.com/asciidoc/asciidoc.git')
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "${pkgbase}"
+  
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd "${pkgbase}"
+  
+  sed -i -e 's#python a2x.py#python2 a2x.py#' Makefile.in
+}
+
+build() {
+  cd "${pkgbase}"
+  
+  autoreconf -i
+  
+  ./configure --prefix='/usr' \
+              --sysconfdir='/etc'
+  
+  make
+}
+
+package() {
+  package-init
+  
+  cd "${pkgbase}"
+
+  make DESTDIR="${tmpdir}" install
+}
+
+package_asciidoc-doc() {
+  package-doc
+}
+
+package_asciidoc() {
+  package-base
+}
