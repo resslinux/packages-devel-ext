@@ -1,0 +1,54 @@
+pkgbase='libcap'
+pkgname=('libcap-doc' 'libcap-dev' 'libcap')
+pkgver=libcap.korg.2.25.r4.g8c67abc
+pkgrel=1
+pkgdesc='POSIX 1003.1e capabilities'
+url='https://git.kernel.org/pub/scm/linux/kernel/git/morgan/libcap.git'
+arch=('x86_64')
+license=('GPL2')
+depends_doc=()
+depends_dev=('libcap')
+depends=('musl')
+makedepends=('make' 'clang')
+source=('git://git.kernel.org/pub/scm/linux/kernel/git/morgan/libcap.git'
+        'gperf.patch')
+sha256sums=('SKIP'
+            'a65584dd6d19e51cd537a93906301013c30c70c4246ff72023883c2797451dad')
+
+pkgver() {
+  cd "${pkgbase}"
+  
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd "${pkgbase}"
+  
+  patch -Np1 -i "${srcdir}/gperf.patch"
+}
+
+build() {
+  cd "${pkgbase}"
+  
+  make CC=clang KERNEL_HEADERS=/usr/include
+}
+
+package() {
+  package-init
+  
+  cd "${pkgbase}"
+
+  make DESTDIR="${tmpdir}" prefix=/usr lib=/lib RAISE_SETFCAP=no install
+}
+
+package_libcap-doc() {
+  package-doc
+}
+
+package_libcap-dev() {
+  package-dev
+}
+
+package_libcap() {
+  package-base
+}
