@@ -1,0 +1,60 @@
+pkgbase='elf-toolchain'
+pkgname=('elf-toolchain-doc' 'elf-toolchain-dev' 'elf-toolchain-libs' 'elf-toolchain')
+pkgver=20170717.r3.g55c4565
+pkgrel=1
+pkgdesc='Essential compilation tools and libraries for building and analyzing ELF based program images'
+url='https://sourceforge.net/p/elftoolchain/wiki/Home/'
+arch=('x86_64')
+license=('BSD')
+depends_doc=()
+depends_dev=('elf-toolchain-libs')
+depends_lib=('musl')
+depends=('musl' 'elf-toolchain-libs')
+makedepends=('bmake' 'clang')
+source=('elf-toolchain::svn://svn.code.sf.net/p/elftoolchain/code/trunk'
+        'lsb-release.patch'
+        'disable-tests.patch')
+sha256sums=('SKIP'
+            '7515335013c00dc0840daa4ae9dc63ff94deaeac6664a832677edcefebd81896'
+            'a95c028dc385f79a286c549fb25a65f6d4e863755327bef04f31c056d15742f3')
+
+prepare() {
+  cd "${pkgbase}"
+  
+  patch -Np1 -i "${srcdir}/lsb-release.patch"
+  patch -Np1 -i "${srcdir}/disable-tests.patch"
+}
+
+build() {
+  cd "${pkgbase}"
+  
+  export MKTEX="no"
+  
+  bmake -j1
+}
+
+package() {
+  package-init
+  
+  cd "${pkgbase}"
+  
+  bmake DESTDIR="${tmpdir}" install
+  
+  rm "${tmpdir}/usr/bin/ld"
+}
+
+package_elf-toolchain-doc() {
+  package-doc
+}
+
+package_elf-toolchain-dev() {
+  package-dev
+}
+
+package_elf-toolchain-libs() {
+  package-lib
+}
+
+package_elf-toolchain() {
+  package-base
+}

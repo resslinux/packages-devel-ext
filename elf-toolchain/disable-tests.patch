@@ -1,0 +1,8 @@
+--- a/mk/elftoolchain.components.mk
++++ b/mk/elftoolchain.components.mk
+@@ -18,4 +18,4 @@
+ WITH_PE=	yes
+ 
+ # Build test suites.
+-WITH_TESTS=	yes
++WITH_TESTS=	no
